@@ -5,7 +5,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "dev": "ts-node --esm index.ts"
   },
   "keywords": [
     "places in sudan",
