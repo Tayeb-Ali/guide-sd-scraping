@@ -5,6 +5,7 @@ import * as fs from "fs";
 const siteUrl = "https://tnseeg.net/call/filter";
 // or from local disk
 // const siteUrl = "file:///D:/sites/home.html";
+
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function run() {
@@ -42,7 +43,7 @@ async function run() {
                 let id = index + 1;
 
                 return {
-                    name: plate_numbers ? plate_numbers.textContent.trim() : null,
+                    plate_numbers: plate_numbers ? plate_numbers.textContent.trim() : null,
                     car_status: car_status ? car_status.textContent.trim() : null,
                     description: description ? description.textContent.trim() : null,
                     chassis_numbers: chassis_numbers ? chassis_numbers.textContent.trim() : null,
@@ -64,9 +65,8 @@ async function run() {
                 return document.querySelector('.box-body p:nth-of-type(3)')?.textContent.trim() ?? "None";
             });
 
-            // Extract the cause of loss.
             const causeOfLoss = await page.evaluate(() => {
-                return document.querySelector('.box-body p:nth-of-type(4)')?.textContent.trim() ?? "None";
+                return document.querySelector('.box-body p:nth-child(11)')?.textContent.trim() ?? "non";
             });
 
             // Extract the general description.
