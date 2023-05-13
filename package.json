@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "index.ts",
+  "main": "guidsd.ts",
   "scripts": {
-    "start": "ts-node index.ts",
-    "dev": "ts-node --esm index.ts"
+    "start": "ts-node guidsd.ts",
+    "dev": "ts-node --esm guidsd.ts"
   },
   "keywords": [
     "places in sudan",

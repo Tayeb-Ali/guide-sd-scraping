@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import * as fs from "fs";
 // import carsJson from "./cars.json";
 
-const siteUrl = "https://tnseeg.net/";
+const siteUrl = "https://tnseeg.net/call/filter";
 // or from local disk
 // const siteUrl = "file:///D:/sites/home.html";
 const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -37,11 +37,13 @@ async function run() {
                 const plate_numbers = car.querySelector('td:nth-child(2)')
                 const description = car.querySelector('td:nth-child(3)');
                 const chassis_numbers = car.querySelector('td:nth-child(4)');
+                const car_status = car.querySelector('td:nth-child(5)');
                 const url = car.querySelector('td:nth-child(2) a');
                 let id = index + 1;
 
                 return {
                     name: plate_numbers ? plate_numbers.textContent.trim() : null,
+                    car_status: car_status ? car_status.textContent.trim() : null,
                     description: description ? description.textContent.trim() : null,
                     chassis_numbers: chassis_numbers ? chassis_numbers.textContent.trim() : null,
                     url: url ? url.getAttribute('href').trim() : null,
@@ -59,28 +61,28 @@ async function run() {
 
             // Extract the place of loss.
             const placeOfLoss = await page.evaluate(() => {
-                return document.querySelector('.box-body p:nth-of-type(3)')?.textContent.trim() ?? "non";
+                return document.querySelector('.box-body p:nth-of-type(3)')?.textContent.trim() ?? "None";
             });
 
             // Extract the cause of loss.
             const causeOfLoss = await page.evaluate(() => {
-                return document.querySelector('.box-body p:nth-of-type(4)')?.textContent.trim() ?? "non";
+                return document.querySelector('.box-body p:nth-of-type(4)')?.textContent.trim() ?? "None";
             });
 
             // Extract the general description.
             const generalDescription = await page.evaluate(() => {
-                return document.querySelector('.box-body p:nth-of-type(1)')?.textContent.trim() ?? "non";
+                return document.querySelector('.box-body p:nth-of-type(1)')?.textContent.trim() ?? "None";
             });
 
             // Extract the phone number.
             const phoneNumber = await page.evaluate(() => {
-                return document.querySelector('.box-body ul li:last-child')?.textContent.trim() ?? "non";
+                return document.querySelector('.box-body ul li:last-child')?.textContent.trim() ?? "None";
             });
 
 
             // Extract the full name.
             const fullName = await page.evaluate(() => {
-                return document.querySelector('.box-body ul li:first-child')?.textContent.trim() ?? "non";
+                return document.querySelector('.box-body ul li:first-child')?.textContent.trim() ?? "None";
             });
             let newData = {
                 name: fullName,
