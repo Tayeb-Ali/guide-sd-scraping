@@ -9,6 +9,20 @@ async function run() {
         ignoreDefaultArgs: ['--disable-extensions'],
     });
     const page = await browser.newPage();
+    await page.setJavaScriptEnabled(false);
+    await page.setCacheEnabled(true);
+    await page.setRequestInterception(true);
+    await page.on('request', (request) => {
+        if (request.resourceType() === 'stylesheet' ||
+            request.resourceType() === 'script' ||
+            request.url().includes('googleapis') ||
+            request.resourceType() === 'image'
+        ) {
+            request.abort();
+        } else {
+            request.continue();
+        }
+    });
 
     try {
         page.setDefaultNavigationTimeout(2 * 60 * 1000);
@@ -16,7 +30,7 @@ async function run() {
         const placesData = await page.evaluate(() => {
             const places = Array.from(document.querySelectorAll('.d-BoxResult'));
             return places.map((place, index) => {
-                const name = place.querySelector('.d-Resultinfo:first-child h5')
+                const name = place.querySelector('.d-ResultTitle')
                 const description = place.querySelector('#locationResult_ditel span');
                 const address = place.querySelector('.d-Resultinfo:first-child h5');
                 const metaTags = place.querySelector('.d-ResultCat');
@@ -24,10 +38,10 @@ async function run() {
                 let id = index + 1;
 
                 return {
-                    title: name ? name.textContent : null,
-                    description: description ? description.textContent : null,
-                    address: description ? address.textContent : null,
-                    metaTags: description ? metaTags.textContent : null,
+                    name: name ? name.textContent.trim() : null,
+                    description: description ? description.textContent.trim() : null,
+                    address: description ? address.textContent.trim() : null,
+                    metaTags: description ? metaTags.textContent.trim() : null,
                     url: "https://www.guide-sd.com" + url,
                     id: id,
                 };
@@ -54,7 +68,7 @@ async function run() {
                 lng: lng
             }
             pushDataToMyObject(place.id, newData, placesData)
-            console.log(lat, lng, place.id);
+            // console.log(lat, lng, place.id);
 
         }
         await browser.close();
